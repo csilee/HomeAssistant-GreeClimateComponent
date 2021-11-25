@@ -1,25 +1,25 @@
-# Custom Gree climate integration. Controls AC's supporting the Gree protocol.
+# Egyedi Gree klímaintegráció. Vezérli a Gree protokollt támogató AC-kat.
 
-## Component configuration
+## Komponens konfiguráció
 
-To configure this component, add the following configuration to your configuration.yaml (replacing the placeholders).
+Az összetevő konfigurálásához adja hozzá a következő konfigurációt a configuration.yaml fájlhoz (a helyőrzők helyére).
 
 ```
  climate:
    - platform: gree
-     name: First AC
-     host: <ip of your first AC>
+     name: Első AC
+     host: <az első AC ip címe>
      port: 7000
-     mac: '<mac address of your first AC>'
+     mac: '<az első AC mac címe>'
      target_temp_step: 1
-     encryption_key: <OPTIONAL: custom encryption key if wifi already configured>
-     uid: <some kind of device identifier. NOTE: for some devices this is optional>
-     temp_sensor: <entity id of the temperature sensor. For example: sensor.bedroom_temperature>
-     lights: <OPTIONAL: input_boolean to switch AC lights mode on/off. For example: input_boolean.first_ac_lights>
-     xfan: <OPTIONAL: input_boolean to switch AC xfan mode on/off. For example: input_boolean.first_ac_xfan>
-     health: <OPTIONAL: input_boolean used to switch the Health option on/off of your first AC. For example: input_boolean.first_ac_health>
-     sleep: <OPTIONAL: input_boolean to switch AC sleep mode on/off. For example: input_boolean.first_ac_sleep>
-     powersave: <OPTIONAL: input_boolean to switch AC powersave mode on/off. For example: input_boolean.first_ac_powersave>
+     encryption_key: <OPCIONÁLIS: egyéni titkosítási kulcs, ha a wifi már konfigurálva van>
+     uid: <valamilyen eszközazonosító. MEGJEGYZÉS: egyes készülékeknél ez opcionális>
+     temp_sensor: <a hőmérséklet-érzékelő entitásazonosítója. Például: sensor.nappali_temperature>
+     lights: <OPCIONÁLIS: input_boolean to switch AC lights mode on/off. For example: input_boolean.first_ac_lights>
+     xfan: <OPCIONÁLIS: input_boolean to switch AC xfan mode on/off. For example: input_boolean.first_ac_xfan>
+     health: <OPCIONÁLIS: input_boolean used to switch the Health option on/off of your first AC. For example: input_boolean.first_ac_health>
+     sleep: <OPCIONÁLIS: input_boolean to switch AC sleep mode on/off. For example: input_boolean.first_ac_sleep>
+     powersave: <OPCIONÁLIS: input_boolean to switch AC powersave mode on/off. For example: input_boolean.first_ac_powersave>
    
    - platform: gree
      name: Second AC
