@@ -1,7 +1,7 @@
 {
   "domain": "gree",
-  "name": "Gree A/C",
-  "version": "2.2.0",
+  "name": "Gree A/C by CsiLee",
+  "version": "2.2.0c",
   "documentation": "https://github.com/csilee/HomeAssistant-GreeClimateComponent",
   "dependencies": [],
   "codeowners": ["@csilee"],
