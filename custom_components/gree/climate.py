@@ -68,7 +68,7 @@ MAX_TEMP = 30
 HVAC_MODES = [HVAC_MODE_AUTO, HVAC_MODE_COOL, HVAC_MODE_DRY, HVAC_MODE_FAN_ONLY, HVAC_MODE_HEAT, HVAC_MODE_OFF]
 
 FAN_MODES = ['Auto', SPEED_LOW, 'Medium-Low', SPEED_MEDIUM, 'Medium-High', SPEED_HIGH, 'Turbo', 'Quiet']
-SWING_MODES = ['Default', 'Swing in full range', 'Fixed in the upmost position', 'Fixed in the middle-up position', 'Fixed in the middle position', 'Fixed in the middle-low position', 'Fixed in the lowest position', 'Swing in the downmost region', 'Swing in the middle-low region', 'Swing in the middle region', 'Swing in the middle-up region', 'Swing in the upmost region']
+SWING_MODES = ['Alap', 'Teljes legyezés', 'Legfelső rögzített', 'Felső rögzített', 'Középen rögzített', 'Alul rögzített', 'Legalul rögzített', 'Legyezés legalul', 'Legyezés alul', 'Legyezés középen', 'Legyezés felül', 'Legyezés legfelül']
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
@@ -91,7 +91,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 @asyncio.coroutine
 def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
-    _LOGGER.info('Setting up Gree climate platform')
+    _LOGGER.info('Gree klímaplatform beállítása')
     name = config.get(CONF_NAME)
     ip_addr = config.get(CONF_HOST)
     port = config.get(CONF_PORT)
@@ -113,7 +113,7 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     encryption_key = config.get(CONF_ENCRYPTION_KEY)
     uid = config.get(CONF_UID)
     
-    _LOGGER.info('Adding Gree climate device to hass')
+    _LOGGER.info('Gree klímaberendezés hozzáadása a hasshoz')
     async_add_devices([
         GreeClimate(hass, name, ip_addr, port, mac_addr, timeout, target_temp_step, temp_sensor_entity_id, lights_entity_id, xfan_entity_id, health_entity_id, powersave_entity_id, sleep_entity_id, eightdegheat_entity_id, air_entity_id, hvac_modes, fan_modes, swing_modes, encryption_key, uid)
     ])
@@ -121,7 +121,7 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
 class GreeClimate(ClimateEntity):
 
     def __init__(self, hass, name, ip_addr, port, mac_addr, timeout, target_temp_step, temp_sensor_entity_id, lights_entity_id, xfan_entity_id, health_entity_id, powersave_entity_id, sleep_entity_id, eightdegheat_entity_id, air_entity_id, hvac_modes, fan_modes, swing_modes, encryption_key=None, uid=None):
-        _LOGGER.info('Initialize the GREE climate device')
+        _LOGGER.info('Inicializálja a GREE klímaberendezést')
         self.hass = hass
         self._name = name
         self._ip_addr = ip_addr
@@ -159,11 +159,11 @@ class GreeClimate(ClimateEntity):
         self._swing_modes = swing_modes
 
         if encryption_key:
-            _LOGGER.info('Using configured encryption key: {}'.format(encryption_key))
+            _LOGGER.info('Konfigurált titkosítási kulcs használata: {}'.format(encryption_key))
             self._encryption_key = encryption_key.encode("utf8")
         else:
             self._encryption_key = self.GetDeviceKey().encode("utf8")
-            _LOGGER.info('Fetched device encrytion key: %s' % str(self._encryption_key))
+            _LOGGER.info('Lekért eszköz titkosítási kulcsa: %s' % str(self._encryption_key))
 
         if uid:
             self._uid = uid
@@ -178,17 +178,17 @@ class GreeClimate(ClimateEntity):
         self.CIPHER = AES.new(self._encryption_key, AES.MODE_ECB)
 
         if temp_sensor_entity_id:
-            _LOGGER.info('Setting up temperature sensor: ' + str(temp_sensor_entity_id))
+            _LOGGER.info('Hőmérséklet érzékelő beállítása: ' + str(temp_sensor_entity_id))
             async_track_state_change(
                 hass, temp_sensor_entity_id, self._async_temp_sensor_changed)
                 
         if lights_entity_id:
-            _LOGGER.info('Setting up lights entity: ' + str(lights_entity_id))
+            _LOGGER.info('Kijelzőfény entitás beállítása: ' + str(lights_entity_id))
             async_track_state_change(
                 hass, lights_entity_id, self._async_lights_entity_state_changed)
 
         if xfan_entity_id:
-            _LOGGER.info('Setting up xfan entity: ' + str(xfan_entity_id))
+            _LOGGER.info('Az xfan entitás beállítása: ' + str(xfan_entity_id))
             async_track_state_change(
                 hass, xfan_entity_id, self._async_xfan_entity_state_changed)
 
@@ -198,22 +198,22 @@ class GreeClimate(ClimateEntity):
                 hass, health_entity_id, self._async_health_entity_state_changed)
 
         if powersave_entity_id:
-            _LOGGER.info('Setting up powersave entity: ' + str(powersave_entity_id))
+            _LOGGER.info('Energiatakarékos entitás beállítása: ' + str(powersave_entity_id))
             async_track_state_change(
                 hass, powersave_entity_id, self._async_powersave_entity_state_changed)
 
         if sleep_entity_id:
-            _LOGGER.info('Setting up sleep entity: ' + str(sleep_entity_id))
+            _LOGGER.info('Alvómód entitás beállítása: ' + str(sleep_entity_id))
             async_track_state_change(
                 hass, sleep_entity_id, self._async_sleep_entity_state_changed)
 
         if eightdegheat_entity_id:
-            _LOGGER.info('Setting up 8℃ heat entity: ' + str(eightdegheat_entity_id))
+            _LOGGER.info('8℃-os fűtési egység beállítása: ' + str(eightdegheat_entity_id))
             async_track_state_change(
                 hass, eightdegheat_entity_id, self._async_eightdegheat_entity_state_changed)
 
         if air_entity_id:
-            _LOGGER.info('Setting up air entity: ' + str(air_entity_id))
+            _LOGGER.info('Levegő entitás beállítása: ' + str(air_entity_id))
             async_track_state_change(
                 hass, air_entity_id, self._async_air_entity_state_changed)
         
@@ -241,7 +241,7 @@ class GreeClimate(ClimateEntity):
         return loadedJsonPack
 
     def GetDeviceKey(self):
-        _LOGGER.info('Retrieving HVAC encryption key')
+        _LOGGER.info('HVAC titkosítási kulcs lekérése')
         GENERIC_GREE_DEVICE_KEY = "a3K8Bx%2r8Y7#xDh"
         cipher = AES.new(GENERIC_GREE_DEVICE_KEY.encode("utf8"), AES.MODE_ECB)
         pack = base64.b64encode(cipher.encrypt(self.Pad('{"mac":"' + str(self._mac_addr) + '","t":"bind","uid":0}').encode("utf8"))).decode('utf-8')
@@ -254,21 +254,21 @@ class GreeClimate(ClimateEntity):
 
     def SetAcOptions(self, acOptions, newOptionsToOverride, optionValuesToOverride = None):
         if not (optionValuesToOverride is None):
-            _LOGGER.info('Setting acOptions with retrieved HVAC values')
+            _LOGGER.info('acOptions beállítása a lekért HVAC-értékekkel')
             for key in newOptionsToOverride:
                 _LOGGER.info('Setting %s: %s' % (key, optionValuesToOverride[newOptionsToOverride.index(key)]))
                 acOptions[key] = optionValuesToOverride[newOptionsToOverride.index(key)]
-            _LOGGER.info('Done setting acOptions')
+            _LOGGER.info('acOptions beállítása kész')
         else:
-            _LOGGER.info('Overwriting acOptions with new settings')
+            _LOGGER.info('acOptions felülírása új beállításokkal')
             for key, value in newOptionsToOverride.items():
                 _LOGGER.info('Overwriting %s: %s' % (key, value))
                 acOptions[key] = value
-            _LOGGER.info('Done overwriting acOptions')
+            _LOGGER.info('A felülírás kész: acOptions')
         return acOptions
         
     def SendStateToAc(self, timeout):
-        _LOGGER.info('Start sending state to HVAC')
+        _LOGGER.info('Kezdje el az állapot küldését a HVAC-nak')
         statePackJson = '{' + '"opt":["Pow","Mod","SetTem","WdSpd","Air","Blo","Health","SwhSlp","Lig","SwingLfRig","SwUpDn","Quiet","Tur","StHt","TemUn","HeatCoolType","TemRec","SvSt","SlpMod"],"p":[{Pow},{Mod},{SetTem},{WdSpd},{Air},{Blo},{Health},{SwhSlp},{Lig},{SwingLfRig},{SwUpDn},{Quiet},{Tur},{StHt},{TemUn},{HeatCoolType},{TemRec},{SvSt},{SlpMod}],"t":"cmd"'.format(**self._acOptions) + '}'
         sentJsonPayload = '{"cid":"app","i":0,"pack":"' + base64.b64encode(self.CIPHER.encrypt(self.Pad(statePackJson).encode("utf8"))).decode('utf-8') + '","t":"pack","tcid":"' + str(self._mac_addr) + '","uid":{}'.format(self._uid) + '}'
         # Setup UDP Client & start transfering
@@ -284,16 +284,16 @@ class GreeClimate(ClimateEntity):
         decodedPack = decryptedPack.decode("utf-8")
         replacedPack = decodedPack.replace('\x0f', '').replace(decodedPack[decodedPack.rindex('}')+1:], '')
         receivedJsonPayload = simplejson.loads(replacedPack)
-        _LOGGER.info('Done sending state to HVAC: ' + str(receivedJsonPayload))
+        _LOGGER.info('Az állapot küldése a HVAC-nak kész: ' + str(receivedJsonPayload))
 
     def UpdateHATargetTemperature(self):
         # Sync set temperature to HA. If 8℃ heating is active we set the temp in HA to 8℃ so that it shows the same as the AC display.
         if (int(self._acOptions['StHt']) == 1):
             self._target_temperature = 8
-            _LOGGER.info('HA target temp set according to HVAC state to 8℃ since 8℃ heating mode is active')
+            _LOGGER.info('HA célhőmérséklet a HVAC állapotnak megfelelően 8℃-ra van állítva, mivel a 8℃ fűtési mód aktív')
         else:
             self._target_temperature = self._acOptions['SetTem']
-            _LOGGER.info('HA target temp set according to HVAC state to: ' + str(self._acOptions['SetTem']))
+            _LOGGER.info('HA célhőmérséklet beállítva a HVAC állapot szerint: ' + str(self._acOptions['SetTem']))
 
     def UpdateHAOptions(self):
         # Sync HA with retreived HVAC options
@@ -312,7 +312,7 @@ class GreeClimate(ClimateEntity):
                 attr = lights_state.attributes
                 if self._current_lights in (STATE_ON, STATE_OFF):
                     self.hass.states.async_set(self._lights_entity_id, self._current_lights, attr)
-        _LOGGER.info('HA lights option set according to HVAC state to: ' + str(self._current_lights))
+        _LOGGER.info('A HA kijelzőfény opciója a HVAC állapotnak megfelelően beállítva: ' + str(self._current_lights))
         # Sync current HVAC xfan option to HA
         if (self._acOptions['Blo'] == 1):
             self._current_xfan = STATE_ON
